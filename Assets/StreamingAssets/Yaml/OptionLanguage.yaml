@@ -1,0 +1,369 @@
+Packs:
+- Id: PackId1
+  Label:
+    CH: 還是... ... ？
+    EN: 還是... ... ？
+    JP: 還是... ... ？
+- Id: PackId2
+  Label:
+    CH: 開始辦正事
+    EN: 開始辦正事
+    JP: 開始辦正事
+- Id: PackId3
+  Label:
+    CH: 去看看謝閔在做什麼
+    EN: 去看看謝閔在做什麼
+    JP: 去看看謝閔在做什麼
+- Id: PackId4
+  Label:
+    CH: 去看看蕾江在做什麼
+    EN: 去看看蕾江在做什麼
+    JP: 去看看蕾江在做什麼
+- Id: PackId5
+  Label:
+    CH: 假人
+    EN: 假人
+    JP: 假人
+- Id: PackId6
+  Label:
+    CH: 桌曆
+    EN: 桌曆
+    JP: 桌曆
+- Id: PackId7
+  Label:
+    CH: 筆電
+    EN: 筆電
+    JP: 筆電
+- Id: PackId8
+  Label:
+    CH: 修理浴室
+    EN: 修理浴室
+    JP: 修理浴室
+- Id: PackId9
+  Label:
+    CH: 答應謝閔
+    EN: 答應謝閔
+    JP: 答應謝閔
+- Id: PackId10
+  Label:
+    CH: 去看看蕾江在做什麼
+    EN: 去看看蕾江在做什麼
+    JP: 去看看蕾江在做什麼
+- Id: PackId11
+  Label:
+    CH: 答應留下
+    EN: 答應留下
+    JP: 答應留下
+- Id: PackId12
+  Label:
+    CH: 解鎖海邊約會
+    EN: 解鎖海邊約會
+    JP: 解鎖海邊約會
+- Id: PackId13
+  Label:
+    CH: 解鎖餐廳約會
+    EN: 解鎖餐廳約會
+    JP: 解鎖餐廳約會
+- Id: PackId16
+  Label:
+    CH: 返回大廳
+    EN: Return to lobby
+    JP: ロビーに戻る
+- Id: PackId17
+  Label:
+    CH: 系統設置
+    EN: System
+    JP: System
+- Id: PackId18
+  Label:
+    CH: 語系 
+    EN: Language
+    JP: Language
+- Id: PackId19
+  Label:
+    CH: 音量
+    EN: Volume
+    JP: Volume
+- Id: PackId20
+  Label:
+    CH: 取消
+    EN: Cancel
+    JP: Cancel
+- Id: PackId21
+  Label:
+    CH: 保存
+    EN: Save
+    JP: Save
+- Id: PackId22
+  Label:
+    CH: 是否要返回大廳
+    EN: Do you want to return to the lobby?
+    JP: ロビーに戻りますか？  
+- Id: PackId30
+  Label:
+    CH: 是否要離開遊戲?
+    EN: Do you want to exit the game?
+    JP: ゲームを終了しますか?
+- Id: PackId86
+  Label:
+    CH: 章節選擇
+    EN: Chapter
+    JP: チャプター
+- Id: PackId87
+  Label:
+    CH: 選擇語系
+    EN: Select Language
+    JP: 言語を選択
+- Id: PackId88
+  Label:
+     CH: 日文
+     EN: JP
+     JP: 日文語
+- Id: PackId89
+  Label:
+     CH: 英文
+     EN: EN
+     JP: 英語
+- Id: PackId90
+  Label:
+     CH: 中文
+     EN: CN
+     JP: 中國語
+- Id: PackId97
+  Label:
+     CH: 關閉遊戲
+     EN: Close the game
+     JP: ゲームを終了します
+- Id: PackId98
+  Label:
+     CH: 再夢一次
+     EN: Dream once more
+     JP: もう一度夢を見る
+- Id: PackId99
+  Label:
+     CH: 夢醒了離開
+     EN: Wake up and leave
+     JP: 目覚めてその場を離れる
+- Id: PackId100
+  Label:
+     CH: title_B_01
+     EN: title_B_01_E
+     JP: title_B_01
+- Id: PackId101
+  Label:
+     CH: word_A_01
+     EN: word_A_01_E
+     JP: word_A_01_J
+- Id: PackId102
+  Label:
+     CH: word_A_02
+     EN: word_A_02_E
+     JP: word_A_02_J
+- Id: PackId103
+  Label:
+     CH: word_B_01
+     EN: word_B_01_E
+     JP: word_B_01_J
+- Id: PackId104
+  Label:
+     CH: word_B_02
+     EN: word_B_02_E
+     JP: word_B_02_J
+- Id: PackId105
+  Label:
+     CH: word_C_01
+     EN: word_C_01_E
+     JP: word_C_01_J
+- Id: PackId106
+  Label:
+     CH: word_C_02
+     EN: word_C_02_E
+     JP: word_C_02_J
+- Id: PackId107
+  Label:
+     CH: word_D_01
+     EN: word_D_01_E
+     JP: word_D_01_J
+- Id: PackId108
+  Label:
+     CH: word_D_02
+     EN: word_D_02_E
+     JP: word_D_02_J
+- Id: PackId111
+  Label:
+     CH: 確認
+     EN: Confirm
+     JP: 確認する
+- Id: PackId112
+  Label:
+     CH: 取消
+     EN: Cancel
+     JP: キャンセル
+- Id: PackId113
+  Label:
+     CH: 畫廊
+     EN: Gallery
+     JP: ギャラリー
+- Id: PackId114
+  Label:
+     CH: 開始遊戲
+     EN: Start
+     JP: スタート
+- Id: PackId115
+  Label:
+     CH: 離開遊戲
+     EN: Quit
+     JP: 終了する
+- Id: PackId116
+  Label:
+     CH: 影片音效
+     EN: Video Sound Effects
+     JP: ビデオ効果音
+- Id: PackId117
+  Label:
+     CH: 特效聲
+     EN: Special Effects Sound
+     JP: 特殊効果音
+- Id: PackId118
+  Label:
+     CH: 人聲
+     EN: Voice
+     JP: 音声
+- Id: PackId119
+  Label:
+     CH: 音效
+     EN: Effects
+     JP: 効果音
+- Id: PackId120
+  Label:
+     CH: 保存
+     EN: Save
+     JP: 保存する
+- Id: PackId121
+  Label:
+     CH: 語言
+     EN: Languege
+     JP: 語言
+- Id: PackId122
+  Label:
+     CH: 系統設置
+     EN: System
+     JP: 系統設置
+
+- Id: PackId123
+  Label:
+     CH: title_setting
+     EN: title_setting_en
+     JP: title_setting_jp
+
+- Id: PackId124
+  Label:
+     CH: title_setting_language
+     EN: title_setting_language_en
+     JP: title_setting_language_jp
+
+- Id: PackId125
+  Label:
+     CH: title_setting_volume
+     EN: title_setting_volume_en
+     JP: title_setting_volume_jp
+
+- Id: PackId126
+  Label:
+     CH: btn_setting_reset
+     EN: btn_setting_reset_en
+     JP: btn_setting_reset_jp
+
+- Id: PackId127
+  Label:
+     CH: btn_setting_disable_reset
+     EN: btn_setting_disable_reset_en
+     JP: btn_setting_disable_reset_jp
+
+- Id: PackId128
+  Label:
+     CH: btn_setting_save
+     EN: btn_setting_save_en
+     JP: btn_setting_save_jp
+
+- Id: PackId129
+  Label:
+     CH: Chinese
+     EN: Chinese_en
+     JP: Chinese_jp
+
+- Id: PackId130
+  Label:
+     CH: English
+     EN: English_en
+     JP: English_jp
+
+- Id: PackId131
+  Label:
+     CH: Japen
+     EN: Japen_en
+     JP: Japen_jp
+- Id: PackId132
+  Label:
+     CH: 全部
+     EN: All
+     JP: All
+- Id: PackId133
+  Label:
+     CH: 第一章
+     EN: Chapter 1
+     JP: 第一章
+
+- Id: PackId134
+  Label:
+     CH: 第二章
+     EN: Chapter 2
+     JP: 第二章
+
+- Id: PackId135
+  Label:
+     CH: 第三章
+     EN: Chapter 3
+     JP: 第三章
+
+- Id: PackId136
+  Label:
+     CH: 第四章
+     EN: Chapter 4
+     JP: 第四章
+
+- Id: PackId137
+  Label:
+     CH: 第五章
+     EN: Chapter 5
+     JP: 第五章
+
+- Id: PackId138
+  Label:
+     CH: 工作室來了個新案子
+     EN: We have a new job coming.
+     JP: スタジオに新しい案件が来た。
+
+- Id: PackId139
+  Label:
+     CH: 5.4.3.2... Action
+     EN: 5.4.3.2... Action
+     JP: 5.4.3.2... Action
+
+- Id: PackId140
+  Label:
+     CH: 收工了，想找你一起
+     EN: Hanging out with you after work.
+     JP: 仕事が終わったら一緒に過ごしたいの。
+
+- Id: PackId141
+  Label:
+     CH: 慶功宴前的準備
+     EN: Prepare for the celebration party.
+     JP: 打ち上げの準備。
+
+- Id: PackId142
+  Label:
+     CH: 想跟你共度今宵
+     EN: I really want to stay at your house.
+     JP: 今夜はあなたと一緒に過ごしたいな
