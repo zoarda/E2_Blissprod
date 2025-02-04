@@ -13,8 +13,8 @@
 @forcedChoice choiceTime:3
 @waitMovie choiceTime:3
 @speedButtonDisable
-@choiceDLC PackId13 button:AvDisableChoiceButton handler:AvDisableButtonList goto:.C1_S0-3P
-@choiceDLC PackId12 button:AvDisableChoiceButton handler:AvDisableButtonList goto:.C1_S0-2P
+@choiceDLC PackId14 button:AvDisableChoiceButton handler:AvDisableButtonList goto:.C1_S0-3P
+@choiceDLC PackId15 button:AvDisableChoiceButton handler:AvDisableButtonList goto:.C1_S0-2P
 @choiceDLC PackId11 button:AvButton handler:AvDisableButtonList goto:.S-0-Q3-C1
 @reBuildChoice
 @stop
