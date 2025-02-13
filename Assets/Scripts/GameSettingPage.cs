@@ -8,8 +8,7 @@ public class GameSettingPage : MonoBehaviour
     public Image Title, Volum, Language, Ch, En, Jp, Save, Cancel;
     public Text TxtVoice;
     public Toggle Tog_Language, Tog_Audio;
-    public Slider Slider_StartGame;
-    // Slider_BGM, Slider_SFX, Slider_Voice, 
+    public Slider Slider_StartGame,Slider_BGM, Slider_SFX, Slider_Voice; 
 
     public Sprite SecltedSprite, UnSelectedSprite;
     public GameObject LanguagePage, VoicePage;
@@ -34,7 +33,7 @@ public class GameSettingPage : MonoBehaviour
                         // 確保場景中只有一個實例
                         if (FindObjectsOfType<GameSettingPage>().Length > 1)
                         {
-                            Debug.LogError("多個 GameSettingPage 實例存在於場景中，這可能會導致問題。");
+                            Debug.LogError("多個 GameSettingPage 實例存在於場景中。");
                         }
                     }
                 }
@@ -61,35 +60,35 @@ public class GameSettingPage : MonoBehaviour
         // Bgm.AudioMixer.SetFloat("BGM", 100);
 
         // 初始化音量初始值
-        // originalBGMVolume = audioManager.BGMSource.volume;
-        // originalSFXVolume = audioManager.SFXSource.volume;
+        originalBGMVolume = audioManager.BGMSource.volume;
+        originalSFXVolume = audioManager.SFXSource.volume;
         // originalVoiceVolume = audioManager.VideoSFXSource.volume;
         originalStartGameVolume = Bgm.BgmVolume;
 
 
         // 初始化臨時音量值
-        // tempBGMVolume = originalBGMVolume;
-        // tempSFXVolume = originalSFXVolume;
+        tempBGMVolume = originalBGMVolume;
+        tempSFXVolume = originalSFXVolume;
         // tempVoiceVolume = originalVoiceVolume;
         tempStartGameVolume = originalStartGameVolume;
 
         // 初始化 Slider 的值
-        // Slider_BGM.value = originalBGMVolume;
-        // Slider_SFX.value = originalSFXVolume;
+        Slider_BGM.value = originalBGMVolume;
+        Slider_SFX.value = originalSFXVolume;
         // Slider_Voice.value = originalVoiceVolume;
         Slider_StartGame.value = originalStartGameVolume;
 
-        // // 初始化 Slider 的事件監聽
-        // Slider_BGM.onValueChanged.AddListener((value) =>
-        // {
-        //     tempBGMVolume = value; // 更新臨時值
-        //     AdjustVolume(audioManager.BGMSource, value);
-        // });
-        // Slider_SFX.onValueChanged.AddListener((value) =>
-        // {
-        //     tempSFXVolume = value; // 更新臨時值
-        //     AdjustVolume(audioManager.SFXSource, value);
-        // });
+        // 初始化 Slider 的事件監聽
+        Slider_BGM.onValueChanged.AddListener((value) =>
+        {
+            tempBGMVolume = value; // 更新臨時值
+            AdjustVolume(audioManager.BGMSource, value);
+        });
+        Slider_SFX.onValueChanged.AddListener((value) =>
+        {
+            tempSFXVolume = value; // 更新臨時值
+            AdjustVolume(audioManager.SFXSource, value);
+        });
         // Slider_Voice.onValueChanged.AddListener((value) =>
         // {
         //     tempVoiceVolume = value; // 更新臨時值
@@ -153,13 +152,13 @@ public class GameSettingPage : MonoBehaviour
         {
             await SubtitlesManager.Instance.LoadSubtitles();
             LanguageManager.Instance.SetLanguage();
-            // originalBGMVolume = tempBGMVolume;
-            // originalSFXVolume = tempSFXVolume;
+            originalBGMVolume = tempBGMVolume;
+            originalSFXVolume = tempSFXVolume;
             // originalVoiceVolume = tempVoiceVolume;
             originalStartGameVolume = tempStartGameVolume;
 
-            // audioManager.BGMSource.volume = originalBGMVolume;
-            // audioManager.SFXSource.volume = originalSFXVolume;
+            audioManager.BGMSource.volume = originalBGMVolume;
+            audioManager.SFXSource.volume = originalSFXVolume;
             // audioManager.VideoSFXSource.volume = originalVoiceVolume;
             Bgm.BgmVolume = originalStartGameVolume;
 
@@ -180,18 +179,18 @@ public class GameSettingPage : MonoBehaviour
             OnButtonSetLanguage("PackId130", En);
             OnButtonSetLanguage("PackId131", Jp);
 
-            // tempBGMVolume = originalBGMVolume;
-            // tempSFXVolume = originalSFXVolume;
+            tempBGMVolume = originalBGMVolume;
+            tempSFXVolume = originalSFXVolume;
             // tempVoiceVolume = originalVoiceVolume;
             tempStartGameVolume = originalStartGameVolume;
 
-            // Slider_BGM.value = originalBGMVolume;
-            // Slider_SFX.value = originalSFXVolume;
+            Slider_BGM.value = originalBGMVolume;
+            Slider_SFX.value = originalSFXVolume;
             // Slider_Voice.value = originalVoiceVolume;
             Slider_StartGame.value = originalStartGameVolume;
 
-            // audioManager.BGMSource.volume = originalBGMVolume;
-            // audioManager.SFXSource.volume = originalSFXVolume;
+            audioManager.BGMSource.volume = originalBGMVolume;
+            audioManager.SFXSource.volume = originalSFXVolume;
             // audioManager.VideoSFXSource.volume = originalVoiceVolume;
             OnbuttonClick(Btn_Chinese);
 
@@ -209,18 +208,18 @@ public class GameSettingPage : MonoBehaviour
           OnButtonSetLanguage("PackId129", Ch);
           OnButtonSetLanguage("PackId130", En);
           OnButtonSetLanguage("PackId131", Jp);
-          // tempBGMVolume = originalBGMVolume;
-          // tempSFXVolume = originalSFXVolume;
+          tempBGMVolume = originalBGMVolume;
+          tempSFXVolume = originalSFXVolume;
           // tempVoiceVolume = originalVoiceVolume;
           tempStartGameVolume = originalStartGameVolume;
 
-          // Slider_BGM.value = originalBGMVolume;
-          // Slider_SFX.value = originalSFXVolume;
+          Slider_BGM.value = originalBGMVolume;
+          Slider_SFX.value = originalSFXVolume;
           // Slider_Voice.value = originalVoiceVolume;
           Slider_StartGame.value = originalStartGameVolume;
 
-          // audioManager.BGMSource.volume = originalBGMVolume;
-          // audioManager.SFXSource.volume = originalSFXVolume;
+          audioManager.BGMSource.volume = originalBGMVolume;
+          audioManager.SFXSource.volume = originalSFXVolume;
           // audioManager.VideoSFXSource.volume = originalVoiceVolume;
           OnbuttonClick(Btn_Chinese);
 
