@@ -7,5 +7,6 @@ public class GameClearPage : MonoBehaviour
 
     public Button ConfirmBtn, CancelBtn;
 
-    public Image ImaTitle,ImaSaying,ImaName;
+    public Image ImaTitle,ImaSaying;
 }
+// ImaName

@@ -4,14 +4,19 @@ using Naninovel;
 
 public class GameSettingPage : MonoBehaviour
 {
-    public Button Btn_Chinese, Btn_English, Btn_Japanese, Btn_Save, Btn_Cancel, selectedButton, Btn_Close;
-    public Image Title, Volum, Language, Ch, En, Jp, Save, Cancel;
-    public Text TxtVoice;
+    public Button Btn_Chinese, Btn_English, Btn_Japanese, Btn_Save, Btn_Cancel, selectedButton, Btn_Close, Btn_LeftArrow, Btn_RightArrow;
+    // public Image Title, Volum, Language, Ch, En, Jp, Save, Cancel;
+    public Text TxtTitle, TxtVoice, TxtFex, TxtBgm, TxtLanguage, TxtCH, TxtEN, TxtJP, TxtSave, TxtCancel
+    , TxtVoiceValue, TxtBgmValue, TxtFexValue;
+    public string StrTitle, StrVoice, StrFex, StrBgm, StrLanguage, StrCH, StrEN, StrJP, StrSave, StrCancel;
     public Toggle Tog_Language, Tog_Audio;
-    public Slider Slider_StartGame,Slider_BGM, Slider_SFX, Slider_Voice; 
+    public Slider Slider_StartGame, Slider_BGM, Slider_SFX, Slider_Voice;
 
     public Sprite SecltedSprite, UnSelectedSprite;
     public GameObject LanguagePage, VoicePage;
+    public Animator aniLanguageList;
+    public CanvasGroup Cag_CH, Cag_EN, Cag_JP;
+    private int languageIndex = 0; // 0 = English, 1 = Chinese, 2 = Japanese
     private float originalBGMVolume, originalSFXVolume, originalVoiceVolume, originalStartGameVolume;
     private float tempBGMVolume, tempSFXVolume, tempVoiceVolume, tempStartGameVolume;
     private float BGMlv;
@@ -41,7 +46,10 @@ public class GameSettingPage : MonoBehaviour
             return instance;
         }
     }
-
+    public void Init()
+    {
+        ChangeLanguage(0);
+    }
     public void Awake()
     {
         if (instance == null)
@@ -54,29 +62,28 @@ public class GameSettingPage : MonoBehaviour
             Destroy(gameObject);
         }
         var Bgm = Engine.GetService<IAudioManager>();
-        LanguageManager.Instance.SetLanguage();
+        LanguageManager languageManager = LanguageManager.Instance;
+        SetSettingPageLanguage();
+        languageManager.SetLanguage();
+        languageManager.SetLanguageImage();
         AudioManager audioManager = AudioManager.Instance;
-        TxtVoice.text = (Bgm.BgmVolume * 100).ToString("0");
-        // Bgm.AudioMixer.SetFloat("BGM", 100);
+        TxtVoiceValue.text = (Bgm.BgmVolume * 100).ToString("0");
 
         // 初始化音量初始值
         originalBGMVolume = audioManager.BGMSource.volume;
         originalSFXVolume = audioManager.SFXSource.volume;
-        // originalVoiceVolume = audioManager.VideoSFXSource.volume;
-        originalStartGameVolume = Bgm.BgmVolume;
+        originalVoiceVolume = Bgm.BgmVolume;
 
 
         // 初始化臨時音量值
         tempBGMVolume = originalBGMVolume;
         tempSFXVolume = originalSFXVolume;
-        // tempVoiceVolume = originalVoiceVolume;
-        tempStartGameVolume = originalStartGameVolume;
+        tempVoiceVolume = originalVoiceVolume;
 
         // 初始化 Slider 的值
         Slider_BGM.value = originalBGMVolume;
         Slider_SFX.value = originalSFXVolume;
-        // Slider_Voice.value = originalVoiceVolume;
-        Slider_StartGame.value = originalStartGameVolume;
+        Slider_Voice.value = originalVoiceVolume;
 
         // 初始化 Slider 的事件監聽
         Slider_BGM.onValueChanged.AddListener((value) =>
@@ -89,78 +96,48 @@ public class GameSettingPage : MonoBehaviour
             tempSFXVolume = value; // 更新臨時值
             AdjustVolume(audioManager.SFXSource, value);
         });
-        // Slider_Voice.onValueChanged.AddListener((value) =>
-        // {
-        //     tempVoiceVolume = value; // 更新臨時值
-        //     AdjustVolume(audioManager.VideoSFXSource, value);
-        // });
-        Slider_StartGame.onValueChanged.AddListener((value) =>
+        Slider_Voice.onValueChanged.AddListener((value) =>
         {
             Bgm.BgmVolume = value;
-            tempStartGameVolume = value;
+            tempVoiceVolume = value;
             VideoVolum = value;
+
+
             AudioManager.Instance.SFXSource.volume = value;
-            TxtVoice.text = (value * 100).ToString("0");
+            TxtVoiceValue.text = (value * 100).ToString("0");
         });
 
         // 語言按鈕邏輯
-        Btn_Chinese.onClick.AddListener(() =>
-        {
-            SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.中文;
-            // LanguageManager.Instance.SetLanguage();
-            OnButtonSetLanguage("PackId123", Title);
-            OnButtonSetLanguage("PackId124", Language);
-            OnButtonSetLanguage("PackId125", Volum);
-            OnButtonSetLanguage("PackId126", Cancel);
-            OnButtonSetLanguage("PackId128", Save);
-            OnButtonSetLanguage("PackId129", Ch);
-            OnButtonSetLanguage("PackId130", En);
-            OnButtonSetLanguage("PackId131", Jp);
-            OnbuttonClick(Btn_Chinese);
-        });
-        Btn_English.onClick.AddListener(() =>
-        {
-            SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.英文;
-            LanguageManager.Instance.SetLanguage();
-            OnButtonSetLanguage("PackId123", Title);
-            OnButtonSetLanguage("PackId124", Language);
-            OnButtonSetLanguage("PackId125", Volum);
-            OnButtonSetLanguage("PackId126", Cancel);
-            OnButtonSetLanguage("PackId128", Save);
-            OnButtonSetLanguage("PackId129", Ch);
-            OnButtonSetLanguage("PackId130", En);
-            OnButtonSetLanguage("PackId131", Jp);
-            OnbuttonClick(Btn_English);
-        });
-        Btn_Japanese.onClick.AddListener(() =>
-        {
-            SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.日文;
-            // LanguageManager.Instance.SetLanguage();
-            OnButtonSetLanguage("PackId123", Title);
-            OnButtonSetLanguage("PackId124", Language);
-            OnButtonSetLanguage("PackId125", Volum);
-            OnButtonSetLanguage("PackId126", Cancel);
-            OnButtonSetLanguage("PackId128", Save);
-            OnButtonSetLanguage("PackId129", Ch);
-            OnButtonSetLanguage("PackId130", En);
-            OnButtonSetLanguage("PackId131", Jp);
-            OnbuttonClick(Btn_Japanese);
-        });
-
+        // Btn_Chinese.onClick.AddListener(() =>
+        // {
+        //     SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.中文;
+        //     SetSettingPageLanguage();
+        // });
+        // Btn_English.onClick.AddListener(() =>
+        // {
+        //     SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.英文;
+        //     SetSettingPageLanguage();
+        // });
+        // Btn_Japanese.onClick.AddListener(() =>
+        // {
+        //     SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.日文;
+        //     SetSettingPageLanguage();
+        // });
+        Btn_LeftArrow.onClick.AddListener(() => ChangeLanguage(-1)); // 切換到上一個語言
+        Btn_RightArrow.onClick.AddListener(() => ChangeLanguage(1)); // 切換到下一個語言
         // 保存按鈕邏輯
         Btn_Save.onClick.AddListener(async () =>
         {
             await SubtitlesManager.Instance.LoadSubtitles();
-            LanguageManager.Instance.SetLanguage();
+            languageManager.SetLanguage();
+            languageManager.SetLanguageImage();
             originalBGMVolume = tempBGMVolume;
             originalSFXVolume = tempSFXVolume;
-            // originalVoiceVolume = tempVoiceVolume;
-            originalStartGameVolume = tempStartGameVolume;
+            originalVoiceVolume = tempVoiceVolume;
 
             audioManager.BGMSource.volume = originalBGMVolume;
             audioManager.SFXSource.volume = originalSFXVolume;
-            // audioManager.VideoSFXSource.volume = originalVoiceVolume;
-            Bgm.BgmVolume = originalStartGameVolume;
+            Bgm.BgmVolume = originalVoiceVolume;
 
             StartNani.Instance.GameSettingPage.SetActive(false);
         });
@@ -169,106 +146,71 @@ public class GameSettingPage : MonoBehaviour
         Btn_Cancel.onClick.AddListener(() =>
         {
             SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.中文;
-            LanguageManager.Instance.SetLanguage();
-            OnButtonSetLanguage("PackId123", Title);
-            OnButtonSetLanguage("PackId124", Language);
-            OnButtonSetLanguage("PackId125", Volum);
-            OnButtonSetLanguage("PackId126", Cancel);
-            OnButtonSetLanguage("PackId128", Save);
-            OnButtonSetLanguage("PackId129", Ch);
-            OnButtonSetLanguage("PackId130", En);
-            OnButtonSetLanguage("PackId131", Jp);
+            languageManager.SetLanguage();
+            languageManager.SetLanguageImage();
+            SetSettingPageLanguage();
 
             tempBGMVolume = originalBGMVolume;
             tempSFXVolume = originalSFXVolume;
-            // tempVoiceVolume = originalVoiceVolume;
-            tempStartGameVolume = originalStartGameVolume;
+            tempVoiceVolume = originalVoiceVolume;
 
             Slider_BGM.value = originalBGMVolume;
             Slider_SFX.value = originalSFXVolume;
-            // Slider_Voice.value = originalVoiceVolume;
-            Slider_StartGame.value = originalStartGameVolume;
+            Slider_Voice.value = originalVoiceVolume;
 
             audioManager.BGMSource.volume = originalBGMVolume;
             audioManager.SFXSource.volume = originalSFXVolume;
-            // audioManager.VideoSFXSource.volume = originalVoiceVolume;
-            OnbuttonClick(Btn_Chinese);
 
             StartNani.Instance.GameSettingPage.SetActive(false);
         });
         Btn_Close.onClick.AddListener(() =>
-      {
-          SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.中文;
-          LanguageManager.Instance.SetLanguage();
-          OnButtonSetLanguage("PackId123", Title);
-          OnButtonSetLanguage("PackId124", Language);
-          OnButtonSetLanguage("PackId125", Volum);
-          OnButtonSetLanguage("PackId126", Cancel);
-          OnButtonSetLanguage("PackId128", Save);
-          OnButtonSetLanguage("PackId129", Ch);
-          OnButtonSetLanguage("PackId130", En);
-          OnButtonSetLanguage("PackId131", Jp);
-          tempBGMVolume = originalBGMVolume;
-          tempSFXVolume = originalSFXVolume;
-          // tempVoiceVolume = originalVoiceVolume;
-          tempStartGameVolume = originalStartGameVolume;
-
-          Slider_BGM.value = originalBGMVolume;
-          Slider_SFX.value = originalSFXVolume;
-          // Slider_Voice.value = originalVoiceVolume;
-          Slider_StartGame.value = originalStartGameVolume;
-
-          audioManager.BGMSource.volume = originalBGMVolume;
-          audioManager.SFXSource.volume = originalSFXVolume;
-          // audioManager.VideoSFXSource.volume = originalVoiceVolume;
-          OnbuttonClick(Btn_Chinese);
-
-          StartNani.Instance.GameSettingPage.SetActive(false);
-      });
-        // // Toggle 邏輯
-        // Tog_Language.onValueChanged.AddListener((isOn) => OnToggleClick(Tog_Language, LanguagePage, isOn));
-        // Tog_Audio.onValueChanged.AddListener((isOn) => OnToggleClick(Tog_Audio, VoicePage, isOn));
-    }
-    void OnButtonSetLanguage(string packid, Image image)
-    {
-        string ImaResourceBtn = LanguageManager.Instance.GetLanguageValue(packid);
-        Texture2D imaResource = Resources.Load<Texture2D>("GameSettingPage/" + ImaResourceBtn);
-        image.sprite = Sprite.Create(imaResource, new Rect(0, 0, imaResource.width, imaResource.height), new Vector2(0.5f, 0.5f));
-        // image.SetNativeSize();
-    }
-    void OnbuttonClick(Button button)
-    {
-        if (selectedButton != null)
         {
-            selectedButton.image.sprite = UnSelectedSprite;
+            SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.中文;
+            languageManager.SetLanguage();
+            languageManager.SetLanguageImage();
+            SetSettingPageLanguage();
+
+            tempBGMVolume = originalBGMVolume;
+            tempSFXVolume = originalSFXVolume;
+            tempVoiceVolume = originalVoiceVolume;
+
+            Slider_BGM.value = originalBGMVolume;
+            Slider_SFX.value = originalSFXVolume;
+            Slider_Voice.value = originalVoiceVolume;
+
+            audioManager.BGMSource.volume = originalBGMVolume;
+            audioManager.SFXSource.volume = originalSFXVolume;
+
+
+            StartNani.Instance.GameSettingPage.SetActive(false);
+        });
+
+        void OnbuttonClick(Button button)
+        {
+            if (selectedButton != null)
+            {
+                selectedButton.image.sprite = UnSelectedSprite;
+            }
+            selectedButton = button;
+            selectedButton.image.sprite = SecltedSprite;
         }
-        selectedButton = button;
-        selectedButton.image.sprite = SecltedSprite;
     }
 
-    // void OnToggleClick(Toggle toggle, GameObject targetPage, bool isOn)
-    // {
-    //     if (isOn)
-    //     {
-    //         CloseOtherToggles(toggle);
-    //         if (targetPage != null) targetPage.SetActive(true);
-    //     }
-    // }
-
-    // void CloseOtherToggles(Toggle activeToggle)
-    // {
-    //     if (activeToggle != Tog_Language)
-    //     {
-    //         Tog_Language.isOn = false;
-    //         LanguagePage.SetActive(false);
-    //     }
-    //     if (activeToggle != Tog_Audio)
-    //     {
-    //         Tog_Audio.isOn = false;
-    //         VoicePage.SetActive(false);
-    //     }
-    // }
-
+    private void SetSettingPageLanguage()
+    {
+        LanguageManager languageManager = LanguageManager.Instance;
+        TxtTitle.text = languageManager.GetLanguageValue(StrTitle);
+        TxtVoice.text = languageManager.GetLanguageValue(StrVoice);
+        TxtBgm.text = languageManager.GetLanguageValue(StrBgm);
+        TxtFex.text = languageManager.GetLanguageValue(StrFex);
+        TxtLanguage.text = languageManager.GetLanguageValue(StrLanguage);
+        TxtCH.text = languageManager.GetLanguageValue(StrCH);
+        TxtEN.text = languageManager.GetLanguageValue(StrEN);
+        TxtJP.text = languageManager.GetLanguageValue(StrJP);
+        TxtCH.text = languageManager.GetLanguageValue(StrCH);
+        TxtSave.text = languageManager.GetLanguageValue(StrSave);
+        TxtCancel.text = languageManager.GetLanguageValue(StrCancel);
+    }
     private void AdjustVolume(AudioSource audioSource, float value)
     {
         if (audioSource != null)
@@ -276,4 +218,54 @@ public class GameSettingPage : MonoBehaviour
             audioSource.volume = value;
         }
     }
+    private void ChangeLanguage(int direction)
+    {
+        StartNani startNani = StartNani.Instance;
+        languageIndex = startNani.languageIndex;
+        languageIndex += direction;
+
+        // 確保 index 在 0~2 之間循環
+        if (languageIndex < 0) languageIndex = 2;
+        if (languageIndex > 2) languageIndex = 0;
+
+        switch (languageIndex)
+        {
+            case 0: // 中文
+                SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.中文;
+                break;
+            case 1: // 日文
+                SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.日文;
+                break;
+            case 2: // 英文
+                SubtitlesManager.Instance.LanguageCase = SubtitlesManager.Language.英文;
+                break;
+        }
+        SetSettingPageLanguage();
+        aniLanguageList.SetInteger("language", languageIndex);
+        startNani.languageIndex = languageIndex;
+
+    }
+
+    private void UpdateButtonTransparency()
+    {
+        // if (languageIndex == 0)
+        // {
+        //     Cag_CH.enabled = false; // 顯示按鈕
+        //     Cag_EN.enabled = true;
+        //     Cag_JP.enabled = true;
+        // }
+        // if (languageIndex == 1)
+        // {
+        //     Cag_CH.enabled = true; // 顯示按鈕
+        //     Cag_JP.enabled = false;
+        //     Cag_EN.enabled = true;
+        // }
+        // if (languageIndex == 2)
+        // {
+        //     Cag_CH.enabled = true; // 顯示按鈕
+        //     Cag_JP.enabled = true;
+        //     Cag_EN.enabled = false;
+        // }
+    }
+
 }

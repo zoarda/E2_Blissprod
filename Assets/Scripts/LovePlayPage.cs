@@ -5,9 +5,8 @@ using UnityEngine.UI;
 
 public class LovePlayPage : MonoBehaviour
 {
-    public GameObject buttonPrefab, NextVideoButtonPrefab, HidenVideoButtonPrefab, SettingButtonPrefab, NextVideoButtonLock, HidenVideoButtonLock;
-    public Button NextVideoButton, HidenVideoButton, SettingButton, SpeedButton, ToggleDisplayButton;
-    public Transform ChoiceButtonParent;
+    public GameObject  SettingButtonPrefab;
+    public Button  SettingButton, SpeedButton, ToggleDisplayButton;
     public CanvasGroup DisplayCanvasGroup;
     public List<GameObject> ChoiceButtonList = new List<GameObject>();
     public Canvas MainCanvas;

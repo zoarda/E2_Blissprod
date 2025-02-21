@@ -13,7 +13,31 @@ public class ChapterPage : MonoBehaviour
     public List<GameObject> Chapter3;
     public List<GameObject> Chapter4;
     public List<GameObject> Chapter5;
+    private static readonly object lockObj = new object();
+    private static ChapterPage instance;
+    public static ChapterPage Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (lockObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = FindObjectOfType<ChapterPage>();
 
+                        // 確保場景中只有一個實例
+                        if (FindObjectsOfType<ChapterPage>().Length > 1)
+                        {
+                            Debug.LogError("多個 GameSettingPage 實例存在於場景中。");
+                        }
+                    }
+                }
+            }
+            return instance;
+        }
+    }
     void Awake()
     {
         InitChapterPage();

@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 using UnityEngine.Video;
 using Naninovel.Async;
 using System.Linq;
+using System;
+
 using HISPlayerAPI;
 
 public class NaniCommandManger : MonoBehaviour
@@ -15,14 +17,13 @@ public class NaniCommandManger : MonoBehaviour
     public Slider WaitTimerSlider;
 
     private List<GameObject> ChoiceButtonList = new List<GameObject>();
-    private List<GameObject> ReplayButtonList = new List<GameObject>();
     [SerializeField] private Button Btn_C1_VB, Btn_C2_VB, Btn_C3_VB, Btn_C4_VB, Btn_C5_VB;
     // [SerializeField] private float Seeweight;
     Coroutine corSlider;
     RenderTexture CurrentRenderTexture;
-
+    UrlToScence urlToScence;
     public VideoPlayer video;
-
+    private string videoName;
     public VideoPlayer CloneVideo;
     VideoPlayer currentVideo = null;
     public bool isLooping = false;
@@ -59,10 +60,23 @@ public class NaniCommandManger : MonoBehaviour
     void Update()
     {
         if (isLooping)
+        {
             LoopVideo();
-        if (currentVideo != null)
+        }
+        else
         {
             UpdateSlider();
+        }
+    }
+    public async UniTask Init()
+    {
+        try
+        {
+            urlToScence = await YamlLoader.LoadStreamingAssetsYaml<UrlToScence>(Application.streamingAssetsPath + "/Yaml/URLToScence.yaml");
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"script urltosence{e}");
         }
     }
 
@@ -115,370 +129,320 @@ public class NaniCommandManger : MonoBehaviour
             spawnManager.DestroySpawned(spawned.Path);
         }
     }
-    public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type)
+    public async UniTask OnPoseButtonClick(string poseName, string label, string labelcompany, string type, GameObject objsex)
     {
+
+        Debug.Log($"點擊動作: {poseName}, 標籤: {label},類型: {type}");
         var player = Engine.GetService<IScriptPlayer>();
         var script = Engine.GetService<IScriptPlayer>();
-        GameObject objCum = lovePlayPage.NextVideoButtonPrefab;
-        GameObject objHidenCum = lovePlayPage.HidenVideoButtonPrefab;
-        GameObject objSetting = lovePlayPage.SettingButtonPrefab;
-        // var startLineIndex = script.PlayedScript.GetLineIndexForLabel(label);
+        await player.PreloadAndPlayAsync(script.PlayedScript.name, label: label);
+
+        if (!ChoiceButtonList.Contains(objsex))
+        {
+            ChoiceButtonList.Add(objsex);
+        }
+        Sex_Button sex_Button = objsex.GetComponent<Sex_Button>();
+        sex_Button.ImaSex.sprite = Resources.Load<Sprite>("Sex/" + labelcompany);
+    }
+
+    public async UniTask OnSpecialButtonClick(string cumLabel, string type, GameObject objsex)
+    {
+        Debug.Log($"類型: {cumLabel}");
+
+        var player = Engine.GetService<IScriptPlayer>();
+        var script = Engine.GetService<IScriptPlayer>();
+        Sex_Button sex_Button = objsex.GetComponent<Sex_Button>();
+        await player.PreloadAndPlayAsync(script.PlayedScript.name, label: cumLabel);
+    }
+    public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, string poseName, string label, string cumLabel, string type)
+    {
+
+        // var player = Engine.GetService<IScriptPlayer>();
+        // var script = Engine.GetService<IScriptPlayer>();
+        // GameObject objCum = lovePlayPage.NextVideoButtonPrefab;
+        // GameObject objHidenCum = lovePlayPage.HidenVideoButtonPrefab;
+        // GameObject objSetting = lovePlayPage.SettingButtonPrefab;
         //生成choice按钮
-        GameObject objChoice = Instantiate(btnObject, lovePlayPage.ChoiceButtonParent.transform);
-        Button choiceButton = objChoice.GetComponent<Button>();
-        LovePlayPageButton lovePlayPageButtonChoice = objChoice.GetComponent<LovePlayPageButton>();
-        Image imaChoice = lovePlayPageButtonChoice.ImaIcon;
-        Image sdChoice = lovePlayPageButtonChoice.ImaSlider;
-        Image imageOk = lovePlayPageButtonChoice.ImaOk;
+        // GameObject objChoice = Instantiate(btnObject, lovePlayPage.ChoiceButtonParent.transform);
+        // Button choiceButton = objChoice.GetComponent<Button>();
+        // LovePlayPageButton lovePlayPageButtonChoice = objChoice.GetComponent<LovePlayPageButton>();
+        // Image imaChoice = lovePlayPageButtonChoice.ImaIcon;
+        // Image sdChoice = lovePlayPageButtonChoice.ImaSlider;
+        // Image imageOk = lovePlayPageButtonChoice.ImaOk;
 
-        sdChoice.fillAmount = 0;
-        lovePlayPageButtonChoice.scriptLabel = label;
-        choiceButton.interactable = true;
-        imaChoice.sprite = Resources.Load<Sprite>("Sex/" + poseName);
-        imaChoice.SetNativeSize();
-        objChoice.AddComponent<MouseHover>();
-        ChoiceButtonList.Add(objChoice);
-
-        // //生成replay按钮
-        // GameObject objReplay = Instantiate(btnObject, lovePlayPage.ReplayButtonContent.transform);
-        // Button replayButton = objReplay.GetComponent<Button>();
-        // LovePlayPageButton lovePlayPageButtonReplay = objReplay.GetComponent<LovePlayPageButton>();
-        // Image imaReplay = lovePlayPageButtonReplay.ImaIcon;
-        // Image sdReplay = lovePlayPageButtonReplay.ImaSlider;
-
-        // sdReplay.fillAmount = 0;
-        // lovePlayPageButtonReplay.scriptLabel = label;
-        // imaReplay.sprite = null;
-        // imaReplay.AddComponent<MouseHover>();
-        // ReplayButtonList.Add(objReplay);
+        // sdChoice.fillAmount = 0;
+        // lovePlayPageButtonChoice.scriptLabel = label;
+        // choiceButton.interactable = true;
+        // imaChoice.sprite = Resources.Load<Sprite>("Sex/" + poseName);
+        // imaChoice.SetNativeSize();
+        // objChoice.AddComponent<MouseHover>();
+        // ChoiceButtonList.Add(objChoice);
 
         //设置choice按钮的label
-        StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-        var varManager = Engine.GetService<ICustomVariableManager>();
-        // var myValue = varManager.GetVariableValue("friendship");
-        // float a = float.Parse(myValue);
-        choiceButton.onClick.RemoveAllListeners();
-        choiceButton.onClick.AddListener(async () =>
-        {
-            await player.PreloadAndPlayAsync(script.PlayedScript.name, label: label);
-            imageOk.gameObject.SetActive(true);
-            // choiceButton.interactable = false;
-            isLooping = false;
-            if (type == "foreplay")
-            {
-                lovePlayPage.NextVideoButton.interactable = true;
-                lovePlayPage.NextVideoButtonLock.SetActive(false);
-            }
-            if (type == "sex")
-            {
-                lovePlayPage.NextVideoButton.interactable = true;
-                lovePlayPage.NextVideoButtonLock.SetActive(false);
-            }
-            if (type == "hidesex")
-            {
-                lovePlayPage.NextVideoButton.interactable = true;
-                lovePlayPage.NextVideoButtonLock.SetActive(false);
-                // if (a >= 3)
-                // {
-                //     lovePlayPage.HidenVideoButton.interactable = true;
-                //     lovePlayPage.HidenVideoButtonLock.SetActive(false);
-                // }
-            }
-            if (type == "demo")
-            {
-                // lovePlayPage.NextVideoButton.interactable = true;
-                // lovePlayPage.NextVideoButtonLock.SetActive(false);
-                // if (a >= 3)
-                // {
-                //     lovePlayPage.HidenVideoButton.interactable = true;
-                //     lovePlayPage.HidenVideoButtonLock.SetActive(false);
-                // }
-            }
-            if (type == "demoForPlay")
-            {
-
-                lovePlayPage.NextVideoButton.interactable = true;
-                lovePlayPage.NextVideoButtonLock.SetActive(false);
-                // if (a >= 3)
-                // {
-                //     lovePlayPage.HidenVideoButton.interactable = true;
-                //     lovePlayPage.HidenVideoButtonLock.SetActive(false);
-                // }
-            }
-            // btnCum.interactable = true;
-            // for (int i = 0; i < ReplayButtonList.Count; i++)
-            // {
-            //     Image imaReplayTemp = ReplayButtonList[i].GetComponentInChildren<Image>();
-            //     Button replayButtonTemp = ReplayButtonList[i].GetComponent<Button>();
-            //     LovePlayPageButton lovePlayPageButtonReplayTemp = ReplayButtonList[i].GetComponent<LovePlayPageButton>();
-            //     if (replayButtonTemp.interactable == false)
-            //     {
-            //         // 更新 Replay 按钮的图像和点击事件
-            //         imaReplayTemp.sprite = imaChoice.sprite;
-            //         imaReplayTemp.SetNativeSize();
-            //         replayButtonTemp.interactable = true;
-            //         replayButtonTemp.onClick.RemoveAllListeners();
-            //         replayButtonTemp.onClick.AddListener(async () =>
-            //         {
-            //             await player.PreloadAndPlayAsync(script.PlayedScript.Name, label: label);
-            //             isLooping = false;
-            //         });
-            //         break;
-            //     }
-            // }
-        });
-        // btnCum.onClick.RemoveAllListeners();
-        // btnCum.onClick.AddListener(async () =>
+        // StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        // var varManager = Engine.GetService<ICustomVariableManager>();
+        // choiceButton.onClick.RemoveAllListeners();
+        // choiceButton.onClick.AddListener(async () =>
         // {
-        //     var Spawnobj = Engine.GetService<ISpawnManager>();
-        //     Spawnobj.DestroySpawned("LovePlayPage");
-        //     await player.PreloadAndPlayAsync(script.PlayedScript.Name, label: cumLabel);
+        //     await player.PreloadAndPlayAsync(script.PlayedScript.name, label: label);
+        //     imageOk.gameObject.SetActive(true);
         //     isLooping = false;
+        //     if (type == "foreplay")
+        //     {
+        //         lovePlayPage.NextVideoButton.interactable = true;
+        //         lovePlayPage.NextVideoButtonLock.SetActive(false);
+        //     }
+        //     if (type == "sex")
+        //     {
+        //         lovePlayPage.NextVideoButton.interactable = true;
+        //         lovePlayPage.NextVideoButtonLock.SetActive(false);
+        //     }
+        //     if (type == "hidesex")
+        //     {
+        //         lovePlayPage.NextVideoButton.interactable = true;
+        //         lovePlayPage.NextVideoButtonLock.SetActive(false);
+        //     }
+        //     if (type == "demo")
+        //     {
+        //     }
+        //     if (type == "demoForPlay")
+        //     {
+
+        //         lovePlayPage.NextVideoButton.interactable = true;
+        //         lovePlayPage.NextVideoButtonLock.SetActive(false);
+        //     }
         // });
 
     }
-    public void ClearLovePlayPage()
-    {
-        foreach (var item in ChoiceButtonList)
-        {
-            Destroy(item);
-        }
-        foreach (var item in ReplayButtonList)
-        {
-            Destroy(item);
-        }
-        ChoiceButtonList.Clear();
-        ReplayButtonList.Clear();
-    }
     public void SetLovePlayPageMode(LovePlayPage lovePlayPage, string cumLabel, string hidenCumLabel, string mode)
     {
-        VideoManager videoManager = VideoManager.Instance;
+        // VideoManager videoManager = VideoManager.Instance;
 
-        GameObject objCum = lovePlayPage.NextVideoButtonPrefab;
-        GameObject objHidenCum = lovePlayPage.HidenVideoButtonPrefab;
-        GameObject objSetting = lovePlayPage.SettingButtonPrefab;
-        Button btnCum = lovePlayPage.NextVideoButtonPrefab.GetComponent<Button>();
-        Button btnHidenCum = lovePlayPage.HidenVideoButtonPrefab.GetComponent<Button>();
-        Button btnSetting = lovePlayPage.SettingButtonPrefab.GetComponent<Button>();
-        Button btnSpeed = lovePlayPage.SpeedButton;
-        Image imaCum = objCum.GetComponentInChildren<Image>();
-        ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
-        lovePlayPage.NextVideoButtonLock.SetActive(true);
-        lovePlayPage.HidenVideoButtonLock.SetActive(true);
-        btnCum.interactable = false;
-        btnHidenCum.interactable = false;
-        btnCum.onClick.RemoveAllListeners();
-        btnSetting.onClick.RemoveAllListeners();
-        btnSpeed.onClick.RemoveAllListeners();
-        btnHidenCum.onClick.RemoveAllListeners();
-        if (mode == "foreplay")
-        {
-            objCum.SetActive(true);
-            objHidenCum.SetActive(false);
-            objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("Sex/sex_P_02");
-            imaCum.SetNativeSize();
-            btnCum.onClick.AddListener(() =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
-                isLooping = false;
-            });
-            btnSetting.onClick.AddListener(() =>
-            {
-                StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-                startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
-                ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            // 速度切換按鈕
-            btnSpeed.onClick.AddListener(() =>
-            {
-                CyclePlaybackSpeed();
-            });
-        }
-        if (mode == "sex")
-        {
-            objCum.SetActive(true);
-            objHidenCum.SetActive(false);
-            objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("Sex/sex_N_02");
-            imaCum.SetNativeSize();
-            btnCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
-                isLooping = false;
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            btnSetting.onClick.AddListener(() =>
-            {
-                StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-                startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
-                ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            // 速度切換按鈕
-            btnSpeed.onClick.AddListener(() =>
-            {
-                CyclePlaybackSpeed();
-            });
+        // GameObject objCum = lovePlayPage.NextVideoButtonPrefab;
+        // GameObject objHidenCum = lovePlayPage.HidenVideoButtonPrefab;
+        // GameObject objSetting = lovePlayPage.SettingButtonPrefab;
+        // Button btnCum = lovePlayPage.NextVideoButtonPrefab.GetComponent<Button>();
+        // Button btnHidenCum = lovePlayPage.HidenVideoButtonPrefab.GetComponent<Button>();
+        // Button btnSetting = lovePlayPage.SettingButtonPrefab.GetComponent<Button>();
+        // Button btnSpeed = lovePlayPage.SpeedButton;
+        // Image imaCum = objCum.GetComponentInChildren<Image>();
+        // ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
+        // lovePlayPage.NextVideoButtonLock.SetActive(true);
+        // lovePlayPage.HidenVideoButtonLock.SetActive(true);
+        // btnCum.interactable = false;
+        // btnHidenCum.interactable = false;
+        // btnCum.onClick.RemoveAllListeners();
+        // btnSetting.onClick.RemoveAllListeners();
+        // btnSpeed.onClick.RemoveAllListeners();
+        // btnHidenCum.onClick.RemoveAllListeners();
+        // if (mode == "foreplay")
+        // {
+        //     objCum.SetActive(true);
+        //     objHidenCum.SetActive(false);
+        //     objSetting.SetActive(true);
+        //     imaCum.sprite = Resources.Load<Sprite>("Sex/sex_P_02");
+        //     imaCum.SetNativeSize();
+        //     btnCum.onClick.AddListener(() =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
+        //         isLooping = false;
+        //     });
+        //     btnSetting.onClick.AddListener(() =>
+        //     {
+        //         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        //         startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
+        //         ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     // 速度切換按鈕
+        //     btnSpeed.onClick.AddListener(() =>
+        //     {
+        //         CyclePlaybackSpeed();
+        //     });
+        // }
+        // if (mode == "sex")
+        // {
+        //     objCum.SetActive(true);
+        //     objHidenCum.SetActive(false);
+        //     objSetting.SetActive(true);
+        //     imaCum.sprite = Resources.Load<Sprite>("Sex/sex_N_02");
+        //     imaCum.SetNativeSize();
+        //     btnCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
+        //         isLooping = false;
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     btnSetting.onClick.AddListener(() =>
+        //     {
+        //         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        //         startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
+        //         ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     // 速度切換按鈕
+        //     btnSpeed.onClick.AddListener(() =>
+        //     {
+        //         CyclePlaybackSpeed();
+        //     });
 
-        }
-        if (mode == "hidesex")
-        {
-            GameObject objchoice = GameObject.Find("ChoiceButtonContent");
-            var objs = objchoice.GetComponentsInChildren<LovePlayPageButton>();
-            foreach (var obj in objs)
-            {
-                var objbs = obj.GetComponent<Button>();
-                if (obj.scriptLabel == "Test")
-                {
-                    obj.Lock.gameObject.SetActive(true);
-                    objbs.interactable = false;
-                }
-            }
-            objCum.SetActive(true);
-            objHidenCum.SetActive(true);
-            objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("Sex/sex_N_02");
-            imaCum.SetNativeSize();
-            objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sex/sex_O_02");
-            objHidenCum.GetComponent<Image>().SetNativeSize();
-            btnCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
-                isLooping = false;
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        // }
+        // if (mode == "hidesex")
+        // {
+        //     GameObject objchoice = GameObject.Find("ChoiceButtonContent");
+        //     var objs = objchoice.GetComponentsInChildren<LovePlayPageButton>();
+        //     foreach (var obj in objs)
+        //     {
+        //         var objbs = obj.GetComponent<Button>();
+        //         if (obj.scriptLabel == "Test")
+        //         {
+        //             obj.Lock.gameObject.SetActive(true);
+        //             objbs.interactable = false;
+        //         }
+        //     }
+        //     objCum.SetActive(true);
+        //     objHidenCum.SetActive(true);
+        //     objSetting.SetActive(true);
+        //     imaCum.sprite = Resources.Load<Sprite>("Sex/sex_N_02");
+        //     imaCum.SetNativeSize();
+        //     objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sex/sex_O_02");
+        //     objHidenCum.GetComponent<Image>().SetNativeSize();
+        //     btnCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
+        //         isLooping = false;
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
 
-            });
-            btnHidenCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: hidenCumLabel);
-                isLooping = false;
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            btnSetting.onClick.AddListener(() =>
-            {
-                StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-                startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            // 速度切換按鈕
-            btnSpeed.onClick.AddListener(() =>
-            {
-                CyclePlaybackSpeed();
-            });
-        }
-        if (mode == "demo")
-        {
-            GameObject objchoice = GameObject.Find("ChoiceButtonContent");
-            var objs = objchoice.GetComponentsInChildren<LovePlayPageButton>();
-            foreach (var obj in objs)
-            {
-                var objbs = obj.GetComponent<Button>();
-                if (obj.scriptLabel == "Test")
-                {
-                    obj.Lock.gameObject.SetActive(true);
-                    objbs.interactable = false;
-                }
-            }
-            objCum.SetActive(true);
-            objHidenCum.SetActive(false);
-            objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("Sex/sex_N_02");
-            imaCum.SetNativeSize();
-            objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sex/sex_O_02");
-            objHidenCum.GetComponent<Image>().SetNativeSize();
-            btnCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
-                isLooping = false;
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                // lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-                spawnManager.DestroySpawned("LovePlayPage");
+        //     });
+        //     btnHidenCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: hidenCumLabel);
+        //         isLooping = false;
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     btnSetting.onClick.AddListener(() =>
+        //     {
+        //         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        //         startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     // 速度切換按鈕
+        //     btnSpeed.onClick.AddListener(() =>
+        //     {
+        //         CyclePlaybackSpeed();
+        //     });
+        // }
+        // if (mode == "demo")
+        // {
+        //     GameObject objchoice = GameObject.Find("ChoiceButtonContent");
+        //     var objs = objchoice.GetComponentsInChildren<LovePlayPageButton>();
+        //     foreach (var obj in objs)
+        //     {
+        //         var objbs = obj.GetComponent<Button>();
+        //         if (obj.scriptLabel == "Test")
+        //         {
+        //             obj.Lock.gameObject.SetActive(true);
+        //             objbs.interactable = false;
+        //         }
+        //     }
+        //     objCum.SetActive(true);
+        //     objHidenCum.SetActive(false);
+        //     objSetting.SetActive(true);
+        //     imaCum.sprite = Resources.Load<Sprite>("Sex/sex_N_02");
+        //     imaCum.SetNativeSize();
+        //     objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sex/sex_O_02");
+        //     objHidenCum.GetComponent<Image>().SetNativeSize();
+        //     btnCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
+        //         isLooping = false;
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         // lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //         spawnManager.DestroySpawned("LovePlayPage");
 
-            });
-            btnHidenCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: hidenCumLabel);
-                isLooping = false;
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            btnSetting.onClick.AddListener(() =>
-            {
-                StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-                startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            btnSpeed.onClick.AddListener(() =>
-            {
-                CyclePlaybackSpeed();
-            });
-        }
-        if (mode == "demoForPlay")
-        {
-            GameObject objchoice = GameObject.Find("ChoiceButtonContent");
-            var objs = objchoice.GetComponentsInChildren<LovePlayPageButton>();
-            foreach (var obj in objs)
-            {
-                var objbs = obj.GetComponent<Button>();
-                if (obj.scriptLabel == "Test")
-                {
-                    obj.Lock.gameObject.SetActive(true);
-                    objbs.interactable = false;
-                }
-            }
-            objCum.SetActive(true);
-            objHidenCum.SetActive(false);
-            objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("Sex/sex_P_02");
-            imaCum.SetNativeSize();
-            objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sex/sex_O_02");
-            objHidenCum.GetComponent<Image>().SetNativeSize();
-            btnCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                // lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-                spawnManager.DestroySpawned("LovePlayPage");
-                
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
-                isLooping = false;
-            });
-            btnHidenCum.onClick.AddListener(async () =>
-            {
-                var player = Engine.GetService<IScriptPlayer>();
-                await player.PreloadAndPlayAsync(player.PlayedScript.name, label: hidenCumLabel);
-                isLooping = false;
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            btnSetting.onClick.AddListener(() =>
-            {
-                StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-                startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
-                var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
-                lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
-            });
-            // 速度切換按鈕
-            btnSpeed.onClick.AddListener(() =>
-            {
-                CyclePlaybackSpeed();
-            });
-        }
+        //     });
+        //     btnHidenCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: hidenCumLabel);
+        //         isLooping = false;
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     btnSetting.onClick.AddListener(() =>
+        //     {
+        //         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        //         startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     btnSpeed.onClick.AddListener(() =>
+        //     {
+        //         CyclePlaybackSpeed();
+        //     });
+        // }
+        // if (mode == "demoForPlay")
+        // {
+        //     GameObject objchoice = GameObject.Find("ChoiceButtonContent");
+        //     var objs = objchoice.GetComponentsInChildren<LovePlayPageButton>();
+        //     foreach (var obj in objs)
+        //     {
+        //         var objbs = obj.GetComponent<Button>();
+        //         if (obj.scriptLabel == "Test")
+        //         {
+        //             obj.Lock.gameObject.SetActive(true);
+        //             objbs.interactable = false;
+        //         }
+        //     }
+        //     objCum.SetActive(true);
+        //     objHidenCum.SetActive(false);
+        //     objSetting.SetActive(true);
+        //     imaCum.sprite = Resources.Load<Sprite>("Sex/sex_P_02");
+        //     imaCum.SetNativeSize();
+        //     objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sex/sex_O_02");
+        //     objHidenCum.GetComponent<Image>().SetNativeSize();
+        //     btnCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         // lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //         spawnManager.DestroySpawned("LovePlayPage");
+
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: cumLabel);
+        //         isLooping = false;
+        //     });
+        //     btnHidenCum.onClick.AddListener(async () =>
+        //     {
+        //         var player = Engine.GetService<IScriptPlayer>();
+        //         await player.PreloadAndPlayAsync(player.PlayedScript.name, label: hidenCumLabel);
+        //         isLooping = false;
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     btnSetting.onClick.AddListener(() =>
+        //     {
+        //         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        //         startNani.OptionPage.SetActive(!startNani.OptionPage.activeSelf);
+        //         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
+        //         lovePlayPagePrefab.GameObject.SetActive(!lovePlayPagePrefab.GameObject.activeSelf);
+        //     });
+        //     // 速度切換按鈕
+        //     btnSpeed.onClick.AddListener(() =>
+        //     {
+        //         CyclePlaybackSpeed();
+        //     });
+        // }
     }
 
     public void SetCheckLoop(bool isLoop)
@@ -508,6 +472,7 @@ public class NaniCommandManger : MonoBehaviour
         videoOnLoop = isLoop;
         Debug.Log($"SetVideoTime / SLT{SetSLT}");
         Debug.Log($"SetVideoTime / ELT{SetELT}");
+
         // video = videoManager.GetVideoPlayer();
         // video.seekCompleted += seekCompleted;
         // videoSeekDone = true;
@@ -568,34 +533,107 @@ public class NaniCommandManger : MonoBehaviour
     }
     void UpdateSlider()
     {
-        foreach (var item in ChoiceButtonList)
+        StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
+        var spawneObjects = Engine.GetService<ISpawnManager>().GetAllSpawned();
+        var lovePlayPageObject = spawneObjects.FirstOrDefault(i => i.Path == "LovePlayPage");
+        if (lovePlayPageObject != null && lovePlayPageObject.GameObject.activeInHierarchy == true)
         {
-            LovePlayPageButton lovePlayPageButton = item.GetComponent<LovePlayPageButton>();
-            Image sdChoice = lovePlayPageButton.ImaSlider;
-            string name = lovePlayPageButton.scriptLabel;
-            if (currentVideo.clip.name == name)
+            foreach (var item in ChoiceButtonList)
             {
-                if (currentVideo.time < SetSLT)
+                // LovePlayPageButton lovePlayPageButton = item.GetComponent<LovePlayPageButton>();
+                Sex_Button sex_Button = item.GetComponent<Sex_Button>();
+                // Image sdChoice = lovePlayPageButton.ImaSlider;
+                // string name = lovePlayPageButton.scriptLabel;
+                Slider sdChoice = sex_Button.sliSex;
+                CanvasGroup canvasGroup = sdChoice.GetComponent<CanvasGroup>();
+                string name = sex_Button.Sexlabel;
+                WebGLStreamController webGLStreamController = WebGLStreamController.Instance;
+                var videoTime = webGLStreamController.GetVideotime() / 1000f;
+                var videolength = webGLStreamController.GetVideoLenght() / 1000f;
+                try
                 {
-                    float a = LerpIF(0, SetSLT, (float)currentVideo.time);
-                    sdChoice.fillAmount = a;
+                    string url = webGLStreamController.multiStreamProperties[0].url[0];
+                    if (urlToScence.videoDictionary.TryGetValue(url, out string script))
+                    {
+                        videoName = script;
+                    }
+                    else
+                    {
+                        Debug.Log($"url not found");
+                    }
                 }
-                if (currentVideo.time > SetSLT && currentVideo.time < SetELT)
+                catch (Exception e)
                 {
-                    float a = LerpIF(SetSLT, SetELT, (float)currentVideo.time);
-                    sdChoice.fillAmount = a;
+                    sdChoice.value = 0;
+                    Debug.Log($"{e}");
                 }
-                if (currentVideo.time > SetELT)
+                if (videoName == name)
                 {
-                    float a = LerpIF(SetELT, (float)currentVideo.length, (float)currentVideo.time);
-                    sdChoice.fillAmount = a;
+                    canvasGroup.alpha = 1;
+                    if (videolength > 0)
+                    {
+                        sdChoice.value = Mathf.Clamp01(videoTime / videolength);
+                    }
+                    else
+                    {
+                        sdChoice.value = 0;
+                        Debug.LogWarning("Video length is zero or negative.");
+                    }
+                    // if (videoTime < SetSLT)
+                    // {
+                    //     float a = LerpIF(0, SetSLT, videoTime);
+                    //     sdChoice.value = a;
+                    // }
+                    // if (videoTime > SetSLT && videoTime < SetELT)
+                    // {
+                    //     float a = LerpIF(SetSLT, SetELT, videoTime);
+                    //     sdChoice.value = a;
+                    // }
+                    // if (videoTime > SetELT)
+                    // {
+                    //     float a = LerpIF(SetELT, videolength, videoTime);
+                    //     sdChoice.value = a;
+                    // }
                 }
-            }
-            else
-            {
-                sdChoice.fillAmount = 0;
+                else
+                {
+                    // sdChoice.value = 0;
+                    canvasGroup.alpha = 0;
+                }
             }
         }
+        else
+        {
+            return;
+        }
+        // foreach (var item in ChoiceButtonList)
+        // {
+        //     Sex_Button sex_Button = item.GetComponent<Sex_Button>();
+        //     Slider sdChoice = sex_Button.sliSex;
+        //     string name = sex_Button.Sexlabel;
+        //     if (currentVideo.clip.name == name)
+        //     {
+        //         if (currentVideo.time < SetSLT)
+        //         {
+        //             float a = LerpIF(0, SetSLT, (float)currentVideo.time);
+        //             sdChoice.value = a;
+        //         }
+        //         if (currentVideo.time > SetSLT && currentVideo.time < SetELT)
+        //         {
+        //             float a = LerpIF(SetSLT, SetELT, (float)currentVideo.time);
+        //             sdChoice.value = a;
+        //         }
+        //         if (currentVideo.time > SetELT)
+        //         {
+        //             float a = LerpIF(SetELT, (float)currentVideo.length, (float)currentVideo.time);
+        //             sdChoice.value = a;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         sdChoice.value = 0;
+        //     }
+        // }
     }
     float LerpIF(float a, float b, float p)
     {
@@ -693,5 +731,9 @@ public class NaniCommandManger : MonoBehaviour
         var camera = Engine.GetService<ICameraManager>();
         canvas.worldCamera = camera.UICamera;
         await UniTask.CompletedTask;
+    }
+    public class UrlToScence
+    {
+        public Dictionary<string, string> videoDictionary;
     }
 }

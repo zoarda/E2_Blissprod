@@ -101,7 +101,7 @@ MonoBehaviour:
   controlsLegend: {fileID: 0}
   fontChangeConfiguration: []
   buttonsContainer: {fileID: 224198401566905306}
-  defaultButtonPrefab: {fileID: -4072395354867787290, guid: 7dabd8ec8a5c2614a8ea85474cef1906, type: 3}
+  defaultButtonPrefab: {fileID: -6261039244396156223, guid: 0652214047993ee44b65f76102633be0, type: 3}
   focusChoiceButtons: 1
 --- !u!225 &225470808532994266
 CanvasGroup:
@@ -164,7 +164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224198401566905306}
-  - component: {fileID: 8724219907526319091}
+  - component: {fileID: 144635381303707247}
   m_Layer: 5
   m_Name: ContentPanel
   m_TagString: Untagged
@@ -186,12 +186,12 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 224251318736265298}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 250}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -300}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &8724219907526319091
+--- !u!114 &144635381303707247
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,17 +200,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1916852858651444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 50
-    m_Bottom: 0
-  m_ChildAlignment: 1
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
+    m_Top: 0
+    m_Bottom: 20
+  m_ChildAlignment: 7
+  m_Spacing: 20
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0

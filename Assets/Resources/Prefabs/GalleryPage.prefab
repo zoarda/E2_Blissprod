@@ -882,6 +882,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BtnPage: {fileID: 8294223924243228489, guid: e32cf90937f093a41a181e4704f54b95, type: 3}
   GalleryButton: {fileID: 3311227761012644504, guid: fdf87b3a0f0a368428847d5b6b8f588e, type: 3}
+  Page: {fileID: 7102593950217382566}
   BtnPageParent: {fileID: 1522378417986155017}
   GalleryButtonParent: {fileID: 3441913341330370159}
   Button_ALL: {fileID: 4351149130434507672}

@@ -13,6 +13,7 @@ public class StartButtonDisable : Command
     {
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
         startNani.buttonController.gameObject.SetActive(true);
+        startNani.LobbyPage.SetActive(false);
         await UniTask.CompletedTask;
     }
 }

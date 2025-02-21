@@ -72,17 +72,17 @@ public class GameClearBack : Command
         {
             Debug.Log("Image not found");
         }
-        string setResourceImaName = LanguageManager.Instance.GetLanguageValue(Name);
-        Texture2D imaName = Resources.Load<Texture2D>("GameOver/" + setResourceImaName);
-        if (imaName != null)
-        {
-            preClearPage.ImaName.sprite = Sprite.Create(imaName, new Rect(0, 0, imaName.width, imaName.height), new Vector2(0.5f, 0.5f));
-            preClearPage.ImaName.SetNativeSize();
-        }
-        else
-        {
-            Debug.Log("Image not found");
-        }
+        // string setResourceImaName = LanguageManager.Instance.GetLanguageValue(Name);
+        // Texture2D imaName = Resources.Load<Texture2D>("GameOver/" + setResourceImaName);
+        // if (imaName != null)
+        // {
+        //     preClearPage.ImaName.sprite = Sprite.Create(imaName, new Rect(0, 0, imaName.width, imaName.height), new Vector2(0.5f, 0.5f));
+        //     preClearPage.ImaName.SetNativeSize();
+        // }
+        // else
+        // {
+        //     Debug.Log("Image not found");
+        // }
         string setResourceImageTitle = LanguageManager.Instance.GetLanguageValue(ImageTitle);
         Texture2D imaTilte = Resources.Load<Texture2D>("GameOver/" + setResourceImageTitle);
         if (imaTilte != null)

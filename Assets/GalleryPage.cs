@@ -13,7 +13,31 @@ public class GalleryPage : MonoBehaviour
     public List<string> C1List, C2List, C3List, C4List, C5List;
 
     StartNani startNani;
+    private static readonly object lockObj = new object();
+    private static GalleryPage instance;
+    public static GalleryPage Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (lockObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = FindObjectOfType<GalleryPage>();
 
+                        // 確保場景中只有一個實例
+                        if (FindObjectsOfType<GalleryPage>().Length > 1)
+                        {
+                            Debug.LogError("多個 GameSettingPage 實例存在於場景中。");
+                        }
+                    }
+                }
+            }
+            return instance;
+        }
+    }
     void Start()
     {
         var player = Engine.GetService<IScriptPlayer>();
@@ -38,7 +62,8 @@ public class GalleryPage : MonoBehaviour
                         {
                             await player.PreloadAndPlayAsync(galleryName);
                             startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-                            startNani.StartGamePage.SetActive(false);
+                            // startNani.StartGamePage.SetActive(false);
+                            startNani.LobbyPage.SetActive(false);
                             startNani.GalleryPage.SetActive(false);
                             startNani.VideoImage.GetComponent<CanvasGroup>().alpha = 1;
                         });

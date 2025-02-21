@@ -149,77 +149,75 @@ Packs:
     EN: Return
     JP: ロビー
 
-- Id: PackId22
+- Id: PackId513
   Label:
-    CH: 是否要返回大廳
-    EN: Do you want to return to the lobby?
-    JP: ロビーに戻りますか？  
-- Id: PackId30
-  Label:
-    CH: 是否要離開遊戲?
-    EN: Do you want to exit the game?
-    JP: ゲームを終了しますか?
+    CH: 確定離開
+    EN: SURE
+    JP: もちろん
 
-- Id: PackId87
+- Id: PackId514
   Label:
-    CH: 選擇語系
-    EN: Select Language
-    JP: 言語を選択
+    CH: 返回色色
+    EN: BACK
+    JP: 戻る
 
-- Id: PackId97
+- Id: PackId515
   Label:
-     CH: 關閉遊戲
-     EN: Quit
-     JP: 終了します
-- Id: PackId98
-  Label:
-     CH: 再夢一次
-     EN: Once more
-     JP: もう一度
-- Id: PackId99
-  Label:
-     CH: 夢醒了離開
-     EN: Wake up
-     JP: 夢から覚める
+    CH: 您確定要離開宿舍？
+    EN: Do you really want to leave?
+    JP: 本当に離れますか？
 
-- Id: PackId111
+- Id: PackId516
   Label:
-     CH: 確認
-     EN: Confirm
-     JP: 確認する
-- Id: PackId112
-  Label:
-     CH: 取消
-     EN: Cancel
-     JP: キャンセル
+    CH: 您確定要返回大廳？
+    EN: Do you really want to back to Lobby?
+    JP: 本当にロビーに戻りますか?
 
 - Id: PackId601
   Label:
      CH: text_start_tw
-     EN: text_start_tw
-     JP: text_start_tw
+     EN: text_start_en
+     JP: text_start_jp
 
 - Id: PackId602
   Label:
      CH: text_gallery_tw
-     EN: text_gallery_tw
-     JP: text_gallery_tw
+     EN: text_gallery_en
+     JP: text_gallery_jp
 
 - Id: PackId603
   Label:
      CH: text_chapter_tw
-     EN: text_chapter_tw
-     JP: text_chapter_tw
+     EN: text_chapter_en
+     JP: text_chapter_jp
 
 - Id: PackId604
   Label:
      CH: text_setting_tw
-     EN: text_setting_tw
-     JP: text_setting_tw
+     EN: text_setting_en
+     JP: text_setting_jp
 
 - Id: PackId605
   Label:
-     CH: test_exit_tw
-     EN: test_exit_tw
-     JP: test_exit_tw
+     CH: text_quit_tw
+     EN: text_quit_en
+     JP: text_quit_jp
+
+- Id: PackId606
+  Label:
+     CH: text_ques_tw
+     EN: text_ques_en
+     JP: text_ques_jp
+
+- Id: PackId607
+  Label:
+     CH: text_gameover_title_tw
+     EN: text_gameover_title_en
+     JP: text_gameover_title_en
+
+- Id: PackId608
+  Label:
+     CH: text_gameover_tw
+     EN: text_gameover_en
+     JP: text_gameover_jp
 

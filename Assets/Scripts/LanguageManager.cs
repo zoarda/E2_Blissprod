@@ -8,9 +8,10 @@ public class LanguageManager : MonoBehaviour
 {
     [SerializeField] private SubtitlesManager subtitlesManager;
     public List<Text> languageTexts;
+    public List<GameObject> languageImage;
     static LanguageManager instance;
     LanguageBundle languageBundle;
-    
+
     public static LanguageManager Instance
     {
         get
@@ -27,19 +28,37 @@ public class LanguageManager : MonoBehaviour
     {
         try
         {
-        foreach (var textitem in languageTexts)
-        {
-            LangugeText langugeText = textitem.GetComponent<LangugeText>();
-            if (langugeText != null)
+            foreach (var textitem in languageTexts)
             {
-                // Debug.Log("langugeText.Id: " + langugeText.Id);
-                textitem.text = GetLanguageValue(langugeText.Id);
+                LangugeText langugeText = textitem.GetComponent<LangugeText>();
+                if (langugeText != null)
+                {
+                    // Debug.Log("langugeText.Id: " + langugeText.Id);
+                    textitem.text = GetLanguageValue(langugeText.Id);
+                }
             }
-        }
         }
         catch (System.Exception e)
         {
             Debug.LogError(e);
+        }
+    }
+    public void SetLanguageImage()
+    {
+        try
+        {
+            foreach (var imaitem in languageImage)
+            {
+                LanguageImage languageImage = imaitem.GetComponent<LanguageImage>();
+                if (languageImage != null)
+                {
+                    languageImage.image.sprite = Resources.Load<Sprite>("lobby/" + GetLanguageValue(languageImage.Id));
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
         }
     }
 
@@ -62,7 +81,7 @@ public class LanguageManager : MonoBehaviour
     {
         // var bundle = LoadYaml(Application.streamingAssetsPath + "/Yaml/OptionLanguage.yaml");
         // var bundle = YamlLoader.LoadYaml<LanguageBundle>(Application.streamingAssetsPath + "/Yaml/OptionLanguage.yaml");
-        
+
         var bundle = languageBundle;
         if (bundle == null)
         {

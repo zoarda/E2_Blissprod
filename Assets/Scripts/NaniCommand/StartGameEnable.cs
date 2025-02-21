@@ -13,7 +13,7 @@ public class StartGameEnable : Command
     private static async UniTask ButtonEnableAsync(AsyncToken asyncToken)
     {
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-        startNani.StartGamePage.gameObject.SetActive(true);
+        startNani.LobbyPage.SetActive(true);
         await UniTask.CompletedTask;
     }
 }

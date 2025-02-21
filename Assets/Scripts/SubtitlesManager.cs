@@ -15,6 +15,8 @@ public class SubtitlesManager : MonoBehaviour
     private List<(double start, double end, string name, string text)> subtitles = new();
     private int currentSubtitleIndex = -1;
     private string videoName;
+    [SerializeField]
+    public GameObject ObjChatBG, ObjNameBG;
 
     [SerializeField] private StartNani startNani;
     public Language LanguageCase = Language.中文;
@@ -31,7 +33,7 @@ public class SubtitlesManager : MonoBehaviour
 
     void Update()
     {
-          if (webGLStreamController == null)
+        if (webGLStreamController == null)
         {
             webGLStreamController = WebGLStreamController.Instance;
             return;
@@ -366,6 +368,8 @@ public class SubtitlesManager : MonoBehaviour
         int index = subtitles.FindIndex(s => currentTime >= s.start && currentTime <= s.end);
         if (index != -1)
         {
+            ObjChatBG.SetActive(true);
+            ObjNameBG.SetActive(true);
             var subtitle = subtitles[index];
             string name = subtitle.name;
             string text = subtitle.text;
@@ -377,6 +381,8 @@ public class SubtitlesManager : MonoBehaviour
         }
         else
         {
+            ObjChatBG.SetActive(false);
+            ObjNameBG.SetActive(false);
             subtitlesText.text = "";
             NameText.text = "";
         }
