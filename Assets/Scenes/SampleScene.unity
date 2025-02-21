@@ -2391,6 +2391,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1084636879}
     m_Modifications:
+    - target: {fileID: 2020618165550288038, guid: 9514d1c23b6e7274694b0c9865dc77a2, type: 3}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5893231292080889028, guid: 9514d1c23b6e7274694b0c9865dc77a2, type: 3}
       propertyPath: m_Name
       value: game_chat
