@@ -15,6 +15,7 @@ public class Lobby : MonoBehaviour
     WebGLStreamController webGLStreamController;
     private static readonly object lockObj = new object();
     private static Lobby instance;
+    [SerializeField] private string url;
     public static Lobby Instance
     {
         get
@@ -79,6 +80,11 @@ public class Lobby : MonoBehaviour
             startNani.GameSettingPage.SetActive(!startNani.GameSettingPage.activeSelf);
             GameSettingPage gameSettingPage = GameSettingPage.Instance;
             gameSettingPage.Init();
+        });
+        Btn_Question.onClick.AddListener(() =>
+        {
+            Application.OpenURL(url);
+            Debug.Log($"openUrl{url}");
         });
     }
 }

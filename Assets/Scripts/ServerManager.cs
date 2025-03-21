@@ -8,8 +8,8 @@ using UnityEngine.Networking;
 
 public class ServerManager : MonoBehaviour
 {
-    const string serverUrl = "https://av1-api-dev.funplaytech.com";
-    // const string serverUrl = "http://localhost:5688";
+    // const string serverUrl = "https://av1-api-dev.funplaytech.com";
+    const string serverUrl = "http://localhost:5688";
 
     public static ServerManager Instance { get; private set; }
 

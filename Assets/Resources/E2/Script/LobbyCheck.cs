@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 public class LobbyCheck : MonoBehaviour
 {
+    [SerializeField] private string url;
     public Text TxtCheck, Txtlobbyquit, Txtlobbyback;
     public string check, quit, back;
     public Button lobbyquit, lobbyback;
@@ -24,6 +25,8 @@ public class LobbyCheck : MonoBehaviour
 
                 // Example 2: 發送 'openurl' 事件
                 Debug.Log("shrimp: back");
+                Application.OpenURL(url);
+                Debug.Log("openUrl");
                 Back();
 
                 // // Example 3: 發送 'reload' 事件

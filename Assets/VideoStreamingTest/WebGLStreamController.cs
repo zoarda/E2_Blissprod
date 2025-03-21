@@ -39,10 +39,9 @@ public class WebGLStreamController : HISPlayerManager
     void Update()
     {
         // if (Input.GetKeyDown(KeyCode.Alpha1))
-        //     Play(url_1);
+        //     PlayVideo();
         // if (Input.GetKeyDown(KeyCode.Alpha2))
-        //     Play(url_2);
-
+        //     PlayPause();
         if (Input.GetKeyDown(KeyCode.RightArrow))
             AddTime(addTimeMillisecond);
         if (Input.GetKeyDown(KeyCode.LeftArrow))
